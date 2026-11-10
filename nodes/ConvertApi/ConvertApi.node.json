@@ -1,0 +1,32 @@
+{
+	"node": "@convertapi/n8n-nodes-convertapi.convertApi",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Utility", "Productivity"],
+	"alias": [
+		"PDF",
+		"Word to PDF",
+		"DOCX to PDF",
+		"HTML to PDF",
+		"PDF to Word",
+		"PDF to Excel",
+		"Merge PDF",
+		"Compress PDF",
+		"OCR",
+		"PDF/A",
+		"Document conversion",
+		"File conversion"
+	],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/ConvertAPI/convertapi-integration-n8n?tab=readme-ov-file#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/ConvertAPI/convertapi-integration-n8n?tab=readme-ov-file"
+			}
+		]
+	}
+}

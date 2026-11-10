@@ -1,0 +1,5 @@
+dist
+node_modules
+test-output
+.n8n-local
+*.tgz

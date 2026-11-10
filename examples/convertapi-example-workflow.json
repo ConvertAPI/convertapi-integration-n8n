@@ -1,0 +1,250 @@
+{
+	"name": "ConvertAPI example: PDF/A, merge, Word and compress",
+	"nodes": [
+		{
+			"id": "6f0c1d1e-0001-4c11-9a01-000000000001",
+			"name": "Start",
+			"type": "n8n-nodes-base.manualTrigger",
+			"typeVersion": 1,
+			"position": [
+				0,
+				200
+			],
+			"parameters": {}
+		},
+		{
+			"id": "6f0c1d1e-0002-4c11-9a01-000000000002",
+			"name": "Download DOCX",
+			"type": "n8n-nodes-base.httpRequest",
+			"typeVersion": 4.2,
+			"position": [
+				220,
+				0
+			],
+			"parameters": {
+				"url": "https://cdn.convertapi.com/public/files/demo.docx",
+				"options": {
+					"response": {
+						"response": {
+							"responseFormat": "file"
+						}
+					}
+				}
+			}
+		},
+		{
+			"id": "6f0c1d1e-0003-4c11-9a01-000000000003",
+			"name": "DOCX to PDF/A",
+			"type": "@convertapi/n8n-nodes-convertapi.convertApi",
+			"typeVersion": 1,
+			"position": [
+				440,
+				0
+			],
+			"parameters": {
+				"resource": "file",
+				"operation": "convertToPdf",
+				"binaryPropertyName": "data",
+				"options": {
+					"pdfa": true
+				}
+			}
+		},
+		{
+			"id": "6f0c1d1e-0005-4c11-9a01-000000000005",
+			"name": "Download PDF 1",
+			"type": "n8n-nodes-base.httpRequest",
+			"typeVersion": 4.2,
+			"position": [
+				220,
+				200
+			],
+			"parameters": {
+				"url": "https://cdn.convertapi.com/public/files/demo.pdf",
+				"options": {
+					"response": {
+						"response": {
+							"responseFormat": "file"
+						}
+					}
+				}
+			}
+		},
+		{
+			"id": "6f0c1d1e-0006-4c11-9a01-000000000006",
+			"name": "Download PDF 2",
+			"type": "n8n-nodes-base.httpRequest",
+			"typeVersion": 4.2,
+			"position": [
+				220,
+				400
+			],
+			"parameters": {
+				"url": "https://cdn.convertapi.com/public/files/demo2.pdf",
+				"options": {
+					"response": {
+						"response": {
+							"responseFormat": "file"
+						}
+					}
+				}
+			}
+		},
+		{
+			"id": "6f0c1d1e-0007-4c11-9a01-000000000007",
+			"name": "Both PDFs",
+			"type": "n8n-nodes-base.merge",
+			"typeVersion": 3,
+			"position": [
+				440,
+				300
+			],
+			"parameters": {}
+		},
+		{
+			"id": "6f0c1d1e-0008-4c11-9a01-000000000008",
+			"name": "Merge PDFs",
+			"type": "@convertapi/n8n-nodes-convertapi.convertApi",
+			"typeVersion": 1,
+			"position": [
+				660,
+				300
+			],
+			"parameters": {
+				"resource": "pdf",
+				"operation": "merge",
+				"mergeMode": "allItems",
+				"binaryPropertyNames": "data",
+				"options": {
+					"bookmarks": "filename",
+					"outputFileName": "merged"
+				}
+			}
+		},
+		{
+			"id": "6f0c1d1e-0010-4c11-9a01-000000000010",
+			"name": "PDF to Word",
+			"type": "@convertapi/n8n-nodes-convertapi.convertApi",
+			"typeVersion": 1,
+			"position": [
+				880,
+				350
+			],
+			"parameters": {
+				"resource": "pdf",
+				"operation": "convertToWord",
+				"binaryPropertyName": "data",
+				"options": {}
+			}
+		},
+		{
+			"id": "6f0c1d1e-0012-4c11-9a01-000000000012",
+			"name": "Compress PDF",
+			"type": "@convertapi/n8n-nodes-convertapi.convertApi",
+			"typeVersion": 1,
+			"position": [
+				880,
+				500
+			],
+			"parameters": {
+				"resource": "pdf",
+				"operation": "compress",
+				"binaryPropertyName": "data",
+				"preset": "ebook",
+				"options": {
+					"outputFileName": "merged-small"
+				}
+			}
+		}
+	],
+	"connections": {
+		"Start": {
+			"main": [
+				[
+					{
+						"node": "Download DOCX",
+						"type": "main",
+						"index": 0
+					},
+					{
+						"node": "Download PDF 1",
+						"type": "main",
+						"index": 0
+					},
+					{
+						"node": "Download PDF 2",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Download DOCX": {
+			"main": [
+				[
+					{
+						"node": "DOCX to PDF/A",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Download PDF 1": {
+			"main": [
+				[
+					{
+						"node": "Both PDFs",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Download PDF 2": {
+			"main": [
+				[
+					{
+						"node": "Both PDFs",
+						"type": "main",
+						"index": 1
+					}
+				]
+			]
+		},
+		"Both PDFs": {
+			"main": [
+				[
+					{
+						"node": "Merge PDFs",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Merge PDFs": {
+			"main": [
+				[
+					{
+						"node": "PDF to Word",
+						"type": "main",
+						"index": 0
+					},
+					{
+						"node": "Compress PDF",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	},
+	"settings": {
+		"executionOrder": "v1"
+	},
+	"pinData": {},
+	"meta": {
+		"templateCredsSetupCompleted": false
+	}
+}
